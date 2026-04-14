@@ -23,18 +23,18 @@ API REST simples em **Ktor + Kotlin + MySQL**, com autenticação JWT, para cada
 
 ## Configuração de ambiente
 
-Crie um arquivo `.env` na raiz do projeto com:
+Crie um arquivo `.env` na raiz do projeto com os valores reais do seu ambiente (substitua todos os `{placeholders}`):
 
 ```env
 JDBC_URL=jdbc:mysql://localhost:3306/{db_name}
 DB_USER={db_user}
 DB_PASSWORD={db_password}
-JWT_SECRET=um_segredo_forte
+JWT_SECRET={jwt_secret}
 JWT_ISSUER=api-docker-qt
 JWT_AUDIENCE=api-docker-qt-users
 ```
 
-> Substitua todos os valores de exemplo (`{...}` e `um_segredo_forte`) por dados reais e seguros no seu ambiente.
+> Use um valor forte e aleatório em `JWT_SECRET` (não reutilize exemplos em produção).
 
 ## Executar localmente
 
