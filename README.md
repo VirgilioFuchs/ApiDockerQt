@@ -1,5 +1,7 @@
 # ApiDockerQt
 
+Projeto da API (crud-mysql) para integração com cliente Qt.
+
 API REST simples em **Ktor + Kotlin + MySQL**, com autenticação JWT, para cadastro e gestão de:
 
 - Usuários
@@ -24,9 +26,9 @@ API REST simples em **Ktor + Kotlin + MySQL**, com autenticação JWT, para cada
 Crie um arquivo `.env` na raiz do projeto com:
 
 ```env
-JDBC_URL=jdbc:mysql://localhost:3306/seu_banco
-DB_USER=seu_usuario
-DB_PASSWORD=sua_senha
+JDBC_URL=jdbc:mysql://localhost:3306/<db_name>
+DB_USER=<db_user>
+DB_PASSWORD=<db_password>
 JWT_SECRET=um_segredo_forte
 JWT_ISSUER=api-docker-qt
 JWT_AUDIENCE=api-docker-qt-users
