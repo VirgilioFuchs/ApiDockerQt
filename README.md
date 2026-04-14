@@ -1,39 +1,136 @@
-# crud-mysql
+# ApiDockerQt
 
-This project was created using the [Ktor Project Generator](https://start.ktor.io).
+Projeto da API (crud-mysql) para integração com cliente Qt.
 
-Here are some useful links to get you started:
+API REST simples em **Ktor + Kotlin + MySQL**, com autenticação JWT, para cadastro e gestão de:
 
-- [Ktor Documentation](https://ktor.io/docs/home.html)
-- [Ktor GitHub page](https://github.com/ktorio/ktor)
-- The [Ktor Slack chat](https://app.slack.com/client/T09229ZC6/C0A974TJ9). You'll need to [request an invite](https://surveys.jetbrains.com/s3/kotlin-slack-sign-up) to join.
+- Usuários
+- Alunos
+- Responsáveis
 
-## Features
+## Stack
 
-Here's a list of features included in this project:
+- Kotlin / Ktor
+- Exposed ORM + HikariCP
+- MySQL
+- JWT (auth-jwt)
+- Docker (via tarefas do plugin Ktor)
 
-| Name                                               | Description                                                 |
-| ----------------------------------------------------|------------------------------------------------------------- |
-| [Routing](https://start.ktor.io/p/routing-default) | Allows to define structured routes and associated handlers. |
+## Pré-requisitos
 
-## Building & Running
+- JDK 17+ (recomendado)
+- MySQL em execução
 
-To build or run the project, use one of the following tasks:
+## Configuração de ambiente
 
-| Task                          | Description                                                          |
-| -------------------------------|---------------------------------------------------------------------- |
-| `./gradlew test`              | Run the tests                                                        |
-| `./gradlew build`             | Build everything                                                     |
-| `buildFatJar`                 | Build an executable JAR of the server with all dependencies included |
-| `buildImage`                  | Build the docker image to use with the fat JAR                       |
-| `publishImageToLocalRegistry` | Publish the docker image locally                                     |
-| `run`                         | Run the server                                                       |
-| `runDocker`                   | Run using the local docker image                                     |
+Crie um arquivo `.env` na raiz do projeto com os valores reais do seu ambiente (substitua todos os `{placeholders}`):
 
-If the server starts successfully, you'll see the following output:
-
-```
-2024-12-04 14:32:45.584 [main] INFO  Application - Application started in 0.303 seconds.
-2024-12-04 14:32:45.682 [main] INFO  Application - Responding at http://0.0.0.0:8080
+```env
+JDBC_URL=jdbc:mysql://localhost:3306/{db_name}
+DB_USER={db_user}
+DB_PASSWORD={db_password}
+JWT_SECRET={jwt_secret}
+JWT_ISSUER=api-docker-qt
+JWT_AUDIENCE=api-docker-qt-users
 ```
 
+> Use um valor forte e aleatório em `JWT_SECRET` (não reutilize exemplos em produção).
+
+## Executar localmente
+
+```bash
+./gradlew run
+```
+
+Servidor padrão: `http://0.0.0.0:8080`
+
+## Rotas
+
+### Pública
+
+- `GET /`  
+  Retorna `Hello World!`.
+
+- `POST /register`  
+  Cadastra usuário.
+  ```json
+  {
+    "nome": "usuario_exemplo",
+    "senha": "SenhaForte#2026"
+  }
+  ```
+
+- `POST /login`  
+  Autentica usuário e retorna token JWT.
+  ```json
+  {
+    "nome": "usuario_exemplo",
+    "senha": "SenhaForte#2026"
+  }
+  ```
+  Resposta:
+  ```json
+  {
+    "token": "seu.jwt.aqui"
+  }
+  ```
+
+### Protegidas (`Authorization: Bearer <token>`)
+
+- `POST /registerAlunoAndResponsavel`  
+  Cadastra aluno e responsável.
+  ```json
+  {
+    "nomeAluno": "João",
+    "dataNascimento": "2015-08-10",
+    "sexoAluno": "M",
+    "rgAluno": "1234567",
+    "cpfAluno": "12345678901",
+    "nomeResponsavel": "Maria",
+    "telefoneResponsavel": "11999999999"
+  }
+  ```
+
+- `PUT /alunos/{id}`  
+  Atualiza aluno e responsável vinculados.
+  ```json
+  {
+    "nomeAluno": "João Silva",
+    "dataNascimento": "2015-08-10",
+    "sexoAluno": "M",
+    "nomeResponsavel": "Maria Silva",
+    "telefoneResponsavel": "11888888888"
+  }
+  ```
+
+- `GET /alunos`  
+  Lista todos os alunos com seus responsáveis.
+
+- `GET /alunos/search?q=joao`  
+  Pesquisa por nome, CPF, RG ou nome do responsável.
+
+- `DELETE /alunos/{id}`  
+  Remove aluno (e responsável sem vínculos restantes, quando aplicável).
+
+## Exemplo rápido com cURL
+
+```bash
+# Login
+TOKEN=$(curl -s -X POST http://localhost:8080/login \
+  -H "Content-Type: application/json" \
+  -d '{"nome":"usuario_exemplo","senha":"SenhaForte#2026"}' | jq -r .token)
+
+# Listar alunos
+curl -X GET http://localhost:8080/alunos \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+## Comandos úteis (Gradle)
+
+- `./gradlew test` — roda testes
+- `./gradlew build` — build completo
+- `./gradlew buildFatJar` — gera JAR executável
+- `./gradlew buildImage` — cria imagem Docker
+- `./gradlew publishImageToLocalRegistry` — publica imagem no registry local
+- `./gradlew run` — inicia a API localmente
+- `./gradlew runDocker` — executa com imagem Docker local
