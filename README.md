@@ -26,9 +26,9 @@ API REST simples em **Ktor + Kotlin + MySQL**, com autenticação JWT, para cada
 Crie um arquivo `.env` na raiz do projeto com:
 
 ```env
-JDBC_URL=jdbc:mysql://localhost:3306/<db_name>
-DB_USER=<db_user>
-DB_PASSWORD=<db_password>
+JDBC_URL=jdbc:mysql://localhost:3306/{db_name}
+DB_USER={db_user}
+DB_PASSWORD={db_password}
 JWT_SECRET=um_segredo_forte
 JWT_ISSUER=api-docker-qt
 JWT_AUDIENCE=api-docker-qt-users
@@ -104,7 +104,7 @@ Servidor padrão: `http://0.0.0.0:8080`
 - `GET /alunos`  
   Lista todos os alunos com seus responsáveis.
 
-- `GET /alunos/search?q=<termo>`  
+- `GET /alunos/search?q=joao`  
   Pesquisa por nome, CPF, RG ou nome do responsável.
 
 - `DELETE /alunos/{id}`  
