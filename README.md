@@ -34,6 +34,8 @@ JWT_ISSUER=api-docker-qt
 JWT_AUDIENCE=api-docker-qt-users
 ```
 
+> Substitua todos os valores de exemplo (`{...}` e `um_segredo_forte`) por dados reais e seguros no seu ambiente.
+
 ## Executar localmente
 
 ```bash
@@ -53,8 +55,8 @@ Servidor padrão: `http://0.0.0.0:8080`
   Cadastra usuário.
   ```json
   {
-    "nome": "admin",
-    "senha": "123456"
+    "nome": "usuario_exemplo",
+    "senha": "SenhaForte#2026"
   }
   ```
 
@@ -62,8 +64,8 @@ Servidor padrão: `http://0.0.0.0:8080`
   Autentica usuário e retorna token JWT.
   ```json
   {
-    "nome": "admin",
-    "senha": "123456"
+    "nome": "usuario_exemplo",
+    "senha": "SenhaForte#2026"
   }
   ```
   Resposta:
@@ -116,7 +118,7 @@ Servidor padrão: `http://0.0.0.0:8080`
 # Login
 TOKEN=$(curl -s -X POST http://localhost:8080/login \
   -H "Content-Type: application/json" \
-  -d '{"nome":"admin","senha":"123456"}' | jq -r .token)
+  -d '{"nome":"usuario_exemplo","senha":"SenhaForte#2026"}' | jq -r .token)
 
 # Listar alunos
 curl -X GET http://localhost:8080/alunos \
